@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>honda hack register</title>
+</head>
+
+<body>
+    <main>
+        <div>
+            <div id="inputArea">
+                <p>输入App代号下载文件</p>
+                <div>
+                    App代号：<input type="text" id="appCode" placeholder="请输入App代号">
+                    <button type="button" id="calc" onclick="on_button_click()">检查</button>
+                </div>
+            </div>
+
+            <div id="downloadArea" style="display: none; padding: 64px; font-size: 32px;">
+                <a id="dlLink" href="" download="">点击下载</a>
+            </div>
+        </div>
+    </main>
+    <script>
+        function createDownloadNode(url, fileName) {
+            var inputArea = document.getElementById("inputArea");
+            inputArea.style.display = "none";
+
+            var downloadArea = document.getElementById("downloadArea");
+            downloadArea.style.display = "block";
+
+            var dlLink = document.getElementById("dlLink");
+            dlLink.setAttribute('href', url)
+            dlLink.setAttribute('download', fileName)
+        }
+
+
+
+        function start(fileName) {
+            fileName = fileName + ".apk"
+
+            var url = "https://charley-tang.github.io/honda-hack-apps/" + fileName
+
+            var xhr = new XMLHttpRequest()
+            xhr.open("HEAD", url)
+            xhr.onreadystatechange = function (e) {
+                console.log(e)
+                console.log(xhr.readyState)
+
+                if (xhr.readyState === 4) {
+                    var httpStatus = xhr.status;
+                    switch (httpStatus) {
+                        case 200:
+                            // alert('文件存在');
+                            createDownloadNode(url, fileName)
+                            break;
+                        case 404:
+                            alert('文件不存在');
+                            break;
+                        default:
+                            alert('服务无法使用');
+                            break;
+                    }
+
+                    console.dir(xhr)
+                }
+            }
+            xhr.send()
+
+            console.log({ url })
+
+            return false
+        }
+
+
+
+        function on_button_click() {
+            var appCode = document.getElementById("appCode").value;
+            if (appCode) {
+                start(appCode)
+            }
+        };
+
+
+
+    </script>
+</body>
+
+</html>
