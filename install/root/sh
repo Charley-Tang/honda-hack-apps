@@ -1,0 +1,31 @@
+#!/system/bin/sh
+
+mount -o remount,rw,sync /system
+cp su /system/xbin/
+chown 0:0 /system/xbin/su
+chmod 6777 /system/xbin/su
+cp busybox /system/xbin/
+chown 0:0 /system/xbin/busybox
+chmod 755 /system/xbin/busybox
+mkdir -p /etc/hondamaster
+echo -n $2 > /etc/hondamaster/agent
+chmod -R 777 /etc/hondamaster
+
+#set whitelist
+chmod 666 /data/data/whitelist-1.0.xml
+cp whitelist.xml /data/data/whitelist-1.0.xml
+chown system:system /data/data/whitelist-1.0.xml
+
+#clear
+rm /system/app/GoogleGuardian.apk
+rm /system/app/com.google.vc.guardian.apk
+pm uninstall com.vincicarassistant
+rm /system/app/HondaHack.apk
+pm uninstall cn.autohack.hondahack
+
+#install app
+chmod 666 ./HondaMaster
+pm install -r ./HondaMaster
+pm enable cn.kuaiqidong.hondamaster
+pm clear com.android.browser
+am start -n cn.kuaiqidong.hondamaster/.activity.MainActivity --ez init true
